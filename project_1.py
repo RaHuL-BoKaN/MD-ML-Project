@@ -20,6 +20,8 @@ print(data)
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -71,6 +73,24 @@ sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=['Less',
 plt.title('Confusion Matrix')
 plt.xlabel('Predicted')
 plt.ylabel('Actual')
+plt.show()
+
+# Apply K-Means Clustering
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+kmeans = KMeans(n_clusters=2, random_state=42)
+clusters = kmeans.fit_predict(X_scaled)
+
+# Add cluster labels to the data
+data['cluster'] = clusters
+
+# Plot the clusters
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=data, x='binding_affinity', y='interaction_energy', hue='cluster', palette='viridis')
+plt.title('K-Means Clustering of MD Data')
+plt.xlabel('Binding Affinity')
+plt.ylabel('Interaction Energy')
 plt.show()
 
 # Save the trained model for future use
